@@ -163,6 +163,24 @@ body {
 h1.display-4 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); }
 .display-sub { font-size: clamp(1rem, 2.2vw, 1.25rem); color: var(--muted); }
 
+/* --- Boutons de Contact --- */
+.btn-contact {
+    padding: 12px 28px;
+    border-radius: 50px; /* Bordures très arrondies façon "pilule" */
+    border-width: 2px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease; /* Animation fluide */
+    display: inline-flex;
+    align-items: center;
+}
+
+/* L'effet magique au survol de la souris */
+.btn-contact:hover {
+    transform: translateY(-6px); /* Fait monter le bouton */
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.3); /* Ajoute un halo lumineux */
+}
+
 /* reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }

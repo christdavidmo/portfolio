@@ -27,6 +27,11 @@ class Projet(models.Model):
     titre = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to='projets/', blank=True, null=True)
+    # On ajoute le champ lien qui peut être laissé vide
+    lien = models.URLField(blank=True, null=True) 
+
+    def __str__(self):
+        return self.titre
 
 class Reseau(models.Model):
     nom = models.CharField(max_length=50) # ex: Gmail, LinkedIn

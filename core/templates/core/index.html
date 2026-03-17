@@ -204,7 +204,7 @@
 
 
     <!-- Projets -->
-    <section id="projets" class="py-5 bg-light">
+   <section id="projets" class="py-5 bg-light">
         <div class="container wrap-center">
             <h2 class="section-title">Mes Projets</h2>
 
@@ -222,7 +222,15 @@
                         <h5 id="proj-{{ forloop.counter }}" class="card-title fw-bold text-primary">{{ projet.titre }}</h5>
                         <p class="card-text text-secondary small mb-3">{{ projet.description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ projet.lien|default:'#' }}" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">Voir</a>
+                            
+                            {% if projet.lien %}
+                            <a href="{{ projet.lien }}" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">
+                                <i class="fab fa-github me-1"></i>Voir
+                            </a>
+                            {% else %}
+                            <span class="text-muted small"><i class="fas fa-code me-1"></i>En local</span>
+                            {% endif %}
+                            
                             <div class="muted small">{{ projet.technologies|default:"Data, ML" }}</div>
                         </div>
                     </div>
@@ -234,6 +242,13 @@
                 </div>
                 {% endfor %}
             </div>
+            
+            <div class="text-center mt-5">  
+                <a href="https://github.com/christdavidmo/mes-projets-analyse.git" target="_blank" rel="noopener" class="btn btn-dark btn-lg" style="border-radius: 8px;">
+                    <i class="fab fa-github me-2"></i>Voir tous les projets sur GitHub
+                </a>  
+            </div>
+
         </div>
     </section>
 
@@ -242,18 +257,75 @@
 
 
     <!-- CONTACT -->
-    <section id="contact" class="bg-dark py-5" aria-label="Contact">
+<section id="contact" class="bg-dark py-5" aria-label="Contact">
     <div class="container text-center">
         <h2 class="section-title text-white border-white mb-4">Me Contacter</h2>
         <p class="lead mb-5 text-light">Prêt à collaborer sur de nouveaux défis Data ? Discutons-en !</p>
 
-        <div class="d-flex justify-content-center flex-wrap gap-3 mb-5">
+        <div class="d-flex justify-content-center flex-wrap gap-4 mb-5">
             {% for reseau in reseaux %}
-            <a href="{{ reseau.lien }}" target="_blank" class="btn-reseau" aria-label="{{ reseau.nom|default:'Réseau' }}">
-                {{ reseau.nom }}
-            </a>
+                
+                {% if 'mail' in reseau.nom|lower or 'email' in reseau.nom|lower %}
+                    <button type="button" class="btn btn-contact btn-outline-info" data-bs-toggle="modal" data-bs-target="#modal-{{ forloop.counter }}">
+                        <i class="fas fa-envelope me-2"></i>{{ reseau.nom }}
+                    </button>
+
+                {% elif 'tel' in reseau.nom|lower or 'num' in reseau.nom|lower or 'téléphone' in reseau.nom|lower %}
+                    <button type="button" class="btn btn-contact btn-outline-success" data-bs-toggle="modal" data-bs-target="#modal-{{ forloop.counter }}">
+                        <i class="fas fa-phone me-2"></i>{{ reseau.nom }}
+                    </button>
+
+                {% else %}
+                    <a href="{{ reseau.lien }}" target="_blank" rel="noopener" class="btn btn-contact btn-outline-light">
+                        <i class="fas fa-link me-2"></i>{{ reseau.nom }}
+                    </a>
+                {% endif %}
+
+                {% if 'mail' in reseau.nom|lower or 'email' in reseau.nom|lower or 'tel' in reseau.nom|lower or 'num' in reseau.nom|lower or 'téléphone' in reseau.nom|lower %}
+                <div class="modal fade" id="modal-{{ forloop.counter }}" tabindex="-1" aria-labelledby="modalLabel-{{ forloop.counter }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content bg-dark text-white shadow-lg" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;">
+                            
+                            <div class="modal-header border-bottom border-secondary">
+                                <h5 class="modal-title fw-bold" id="modalLabel-{{ forloop.counter }}">
+                                    {% if 'mail' in reseau.nom|lower or 'email' in reseau.nom|lower %}
+                                        <i class="fas fa-envelope-open-text me-2 text-info"></i>Mon Email
+                                    {% else %}
+                                        <i class="fas fa-phone-alt me-2 text-success"></i>Mes Numéros
+                                    {% endif %}
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            
+                            <div class="modal-body py-4 text-center">
+                                {% if 'mail' in reseau.nom|lower or 'email' in reseau.nom|lower %}
+                                    <p class="text-light mb-3">N'hésitez pas à m'écrire :</p>
+                                    <div class="p-3 rounded" style="background-color: rgba(13, 202, 253, 0.1); border: 1px dashed #0dcaf0;">
+                                        <h4 class="text-info fw-bold mb-0 user-select-all">
+                                            {{ reseau.lien|cut:"mailto:" }}
+                                        </h4>
+                                    </div>
+                                    <a href="mailto:{{ reseau.lien|cut:'mailto:' }}" class="btn btn-info mt-4 rounded-pill text-dark fw-bold">
+                                        <i class="fas fa-paper-plane me-2"></i>Ouvrir ma messagerie
+                                    </a>
+                                {% else %}
+                                    <p class="text-light mb-3">Vous pouvez me joindre directement :</p>
+                                    <div class="p-3 rounded mb-3" style="background-color: rgba(25, 135, 84, 0.1); border: 1px dashed #198754;">
+                                        <h5 class="text-success fw-bold mb-0 user-select-all" style="line-height: 1.8;">
+                                            {{ reseau.lien|cut:"tel:" }}
+                                        </h5>
+                                    </div>
+                                    <p class="small text-muted m-0"><i class="fab fa-whatsapp me-1 text-success"></i>Également disponible sur WhatsApp</p>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
             {% empty %}
-            <p class="text-muted">Ajoutez vos réseaux dans l'administration.</p>
+                <p class="text-muted">Ajoutez vos réseaux dans l'administration.</p>
             {% endfor %}
         </div>
 
